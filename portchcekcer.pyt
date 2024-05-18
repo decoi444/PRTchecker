@@ -3,22 +3,20 @@ import multiprocessing
 common_ports = [21, 22, 23, 25, 80, 443, 110, 143, 3306, 5432]
 def scan_port(target_host, target_port):
     try:
-        # Create a socket object
-        socket_obj = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        
+        socket_obj = socket.socket(socket.AF_INET, socket.SOCK_STREAM) # Socket Object
 
-        # Set a timeout for the connection attempt (adjust as needed)
-        socket_obj.settimeout(2)
+        socket_obj.settimeout(2) # Timeout for the connection attempt 
 
-        # Attempt to connect to the target host and port
-        result = socket_obj.connect_ex((target_host, target_port))
+        
+        result = socket_obj.connect_ex((target_host, target_port)) # Attempt Connection
 
         if result == 0:
             print(f"Port {target_port} is open on {target_host}")
         else:
             print(f"Port {target_port} is closed on {target_host}")
 
-        # Close the socket
-        socket_obj.close()
+        socket_obj.close() # Close socket
 
     except KeyboardInterrupt:
         print("\nScan terminated by user.")
@@ -30,10 +28,10 @@ def scan_port(target_host, target_port):
         print(f"Could not connect to port {target_port} on {target_host} (closed).")
 
 def parallel_port_scan(target_host, target_ports):
-    # Create a pool of worker processes
+    
     pool = multiprocessing.Pool(processes=50)  # Adjust the number of processes as needed
 
-    # Use the pool to scan the specified ports in parallel
+
     pool.starmap(scan_port, [(target_host, port) for port in target_ports])
 
 def main():
